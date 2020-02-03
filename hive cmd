@@ -1,0 +1,78 @@
+hive --service cli --database training
+hive -e "SET;" > hive_properties
+view hive_properties
+:q!   ===== exit in cli
+set hive.execution.engine=tez;    tez engine
+set hive.execution.engine;
+dfs -ls /public;
+hive -e "SET;"|grep warehouse ==== to set the warerhouse dir
+SET hive.metastore.warehouse.dir;
+hive --database training_retail
+//to preview the data
+dfs -tail hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/p_orders/part-00000;
+//====To change permission for the user
+su - hdfs -c "hdfs dfs -chmod -R +w /premwilfred24/"
+
+//Parent directory
+
+/data/retail_db
+
+// to view the number of rows
+wc -l part-00000
+
+//to view the certain column using awk cmds
+awk -F"," '{ print $2 }' part-00000|sort|uniq
+
+//to find the count after the sort|uniq|wc -l
+awk -F"," '{ print $2 }' part-00000|sort|uniq|wc -l
+
+hadoop fs -rm -R hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/p_orders/part-00000
+
+//copy a file ===
+hadoop fs -get hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/p_orders/part-00000_0
+
+hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/nyse_data
+
+hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/nyse_data/NYSE_1997.txt.gz
+
+hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/p_orders_part
+
+
+
+dfs -tail hdfs://nn01.itversity.com:8020/apps/hive/warehouse/training_retail.db/p_orders_part/orders_month=201310/orders_201310;
+
+
+
+set -o vi
+//t can let you easily navigate and edit the command line using vim's shortcuts, e.g. quickly move to one word right, delete a word.
+By the default shortcuts, when you need to go to the end of the line, you need to Ctrl+e, whereas with set -o vi, you just hit $, like in vim.
+
+https://unix.stackexchange.com/questions/30454/advantages-of-using-set-o-vi
+
+
+usage: hive
+ -d,--define <key=value>          Variable subsitution to apply to hive
+                                  commands. e.g. -d A=B or --define A=B
+    --database <databasename>     Specify the database to use
+ -e <quoted-query-string>         SQL from command line
+ -f <filename>                    SQL from files
+ -H,--help                        Print help information
+    --hiveconf <property=value>   Use value for given property
+    --hivevar <key=value>         Variable subsitution to apply to hive
+                                  commands. e.g. --hivevar A=B
+ -i <filename>                    Initialization SQL file
+ -S,--silent                      Silent mode in interactive shell
+ -v,--verbose                     Verbose mode (echo executed SQL to the
+                                  console)
+
+
+
+hive.exec.dynamic.partition=true
+hive.exec.dynamic.partition.mode=strict
+hive.exec.max.dynamic.partitions=5000
+hive.exec.max.dynamic.partitions.pernode=2000
+hive.load.dynamic.partitions.thread=15
+hive.optimize.sort.dynamic.partition=false
+hive.tez.dynamic.partition.pruning=true
+hive.tez.dynamic.partition.pruning.max.data.size=104857600
+hive.tez.dynamic.partition.pruning.max.event.size=1048576
