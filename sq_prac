@@ -1,0 +1,57 @@
+msql -u -retail-user -h ms.itversity.com -p
+
+SHOW databases;
+sqoop list-databases \
+--connect jdbc:mysql://ms.itversity.com \
+--username retail_user \
+--password itversity
+
+sqoop list-tables \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+-P
+
+sqoop eval \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--query "SELECT * FROM orders LIMIT 10"
+
+sqoop eval \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+-e "SHOW tables"
+
+sqoop eval \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+-e "DESCRIBE orders"
+
+sqoop eval \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--query "SELECT * FROM orders LIMIT 10" 1>query.out 2>query.err  /*1=standard out, 2=error log*/
+
+
+hadoop fs -mkdir /user/training/sqoop_import
+
+sqoop import \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--table orders \
+--target-dir /user/training/sqoop_import/retail_db/orders
+
+
+
+sqoop import \
+--connect jdbc:mysql://ms.itversity.com:3306/retail_db \
+--username retail_user \
+--password itversity \
+--table order_items \
+--warehouse-dir /user/training/sqoop_import/retail_db
+
+
